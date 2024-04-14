@@ -24,10 +24,12 @@ def has_non_alphanumeric(row):
         if char not in string.ascii_letters and char not in string.digits and char not in string.punctuation and char != " ":
             return True
     return False
+def string_not_empty(row):
+     return len(row) > 0 
 
 # Apply the function to the 'Text' column and filter rows
-df = df[df['rewrite_prompt_old'].apply(lambda x: not has_non_alphanumeric(x))]
-df = df[:1000]
+df = df[df['rewrite_prompt'].apply(lambda x: not string_not_empty(x))]
+print(df.head(3))
 import time
 import csv
 
