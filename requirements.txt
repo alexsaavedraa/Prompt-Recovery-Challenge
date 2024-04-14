@@ -1,0 +1,7 @@
+pandas
+numpy
+sentence-transformers
+scikit-learn 
+permutations
+seaborn
+matplotlib
