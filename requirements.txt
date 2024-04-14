@@ -5,3 +5,4 @@ scikit-learn
 permutations
 seaborn
 matplotlib
+umap
