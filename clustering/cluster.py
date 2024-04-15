@@ -84,6 +84,5 @@ for i, name in enumerate(files):
 
 print()
 
-pickle.dump(model, open('results/berttopic/default_embed_gpt_bigrams_v15_50.pkl','wb'))
-
+model.save("bertsave", serialization="pickle")
 
