@@ -56,10 +56,6 @@ preds, probs = model.fit_transform(data_df["rewrite_prompt"])
 
 data_df["class"] = preds
 
-# DIVERSITY FROM FILE
-# data_df = pd.read_csv("results/gpt_bigrams_v15_500_with_class.csv")
-# model = pickle.load(open('model.pkl','rb'))
-
 
 print()
 
