@@ -73,6 +73,7 @@ def find_all_fittest(sentences_df, limit):
     return res, df_unique
 
 class ChildrenMaker():
+    '''this contains all the helper functions for Promptifyer and Debloater to create children'''
     def __init__(self, bigrams, words_set, word_shift, num_injections, num_insertions):
         self.bigrams = bigrams
         self.all_words_seen = list(words_set)

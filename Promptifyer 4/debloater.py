@@ -36,19 +36,23 @@ class Debloater():
         self.survivors_per_generation = survivors_per_gen
 
         self.all_sentences_tried = set()
-        
+
         embeddings = pd.read_csv(training_file, encoding = 'latin-1')[:num_rows_to_score_against]
         embeddings['rewrite_prompt_v'] = embeddings['rewrite_prompt_v'].apply(lambda x: np.array(ast.literal_eval(x)))
         self.embeddings_df = embeddings
 
         self.child_maker = WordRemover(num_removals=deletion_children)
         
+
     def make_sentence_vectors_df(self, sentences_df):
+        '''converts sentences into T5 vectors, returns in sentence_v colum of df'''
         test_df_sentences_v = self.embedding_model.encode(sentences_df['sentence'], normalize_embeddings=True, show_progress_bar=True, convert_to_tensor=True, device='cuda')
         sentences_df['sentence_v'] = test_df_sentences_v.tolist()  # Convert to list for DataFrame assignment
         return sentences_df
     
+
     def multiprocess_scores(self, sentences_df):
+        '''calculates scores using multiprocessing'''
         num_cores = multiprocessing.cpu_count()
         chunks = np.array_split(sentences_df, num_cores)  # Split dataframe into chunks
 
@@ -59,6 +63,7 @@ class Debloater():
         return processed_df
     
     def advance_to_next_generation(self, generation = 0):
+        '''Advances the generation of the debloater'''
         print(f"DEBLOATER: Advancing to generation # {generation}")
         new_gen = []
         for parent in self.parents:

@@ -11,6 +11,7 @@ import string
 import random
 from itertools import permutations
 
+#Simple tool to search thru CSV files for best prompts
 
 
 

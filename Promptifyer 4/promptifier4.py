@@ -28,7 +28,7 @@ class Promptifier():
                  debloat_lookback=70,
                  debloat_minimum_delta=0.001):
         
-        self.origin = 'Promptifyer 4 by Alex Saavedra and Prachi Patil'
+        self.origin = 'Promptifyer 4 by Alexander Saavedra and Prachi Patil'
         self.max_top_sentence_streak = max_top_sentence_streak
 
         self.embedding_model = SentenceTransformer('sentence-t5-base')
@@ -60,6 +60,7 @@ class Promptifier():
         self.debloat_lookback = debloat_lookback
 
     def load_bi_grams_from_files(self):
+        '''loads a set of bigrams from a file, and returns them as a dictionary'''
         bi_grams = defaultdict(list)
         files = [f for f in os.listdir(self.bigram_source_folder) if f.endswith('.txt')]
         for file_name in files:
@@ -75,11 +76,13 @@ class Promptifier():
         return bi_grams
 
     def make_sentence_vectors_df(self, sentences_df):
+        '''adds or updates the sentence_v column of the sentences_df. sentence_v is the vectorized form of sentence'''
         test_df_sentences_v = self.embedding_model.encode(sentences_df['sentence'], normalize_embeddings=True, show_progress_bar=True, convert_to_tensor=True, device='cuda')
         sentences_df['sentence_v'] = test_df_sentences_v.tolist()  # Convert to list for DataFrame assignment
         return sentences_df
     
     def multiprocess_scores(self, sentences_df):
+        '''uses a multiprocessing pool to calculate scores'''
         num_cores = multiprocessing.cpu_count()
         chunks = np.array_split(sentences_df, num_cores)  # Split dataframe into chunks
 
@@ -90,6 +93,7 @@ class Promptifier():
         return processed_df
     
     def advance_to_next_generation(self, generation = 0):
+        '''Advances all sentences to the next generation'''
         print(f"Advancing to generation # {generation}")
         new_gen = []
         for parent in self.parents:
@@ -129,6 +133,7 @@ class Promptifier():
         self.parents = new_parents_list
 
     def should_debloat(self, gen):
+        '''analyzes the dataframe in order to determine if the debloater should run. The debloater runs when the best score of each generation has not improved after self.lookback generations'''
         df = pd.read_csv(self.best_of_each_gen)
         gen_max = df.sort_values('score', ascending=False).drop_duplicates(['generation']).sort_values('generation', ascending=False).head(self.debloat_lookback)
         prev_min = gen_max["score"].min()
@@ -143,6 +148,7 @@ class Promptifier():
                   starting_generation=0,
                   num_generations=2000,
                   track_progress=True):
+        '''Runs and manages core logic of Promptifyer. Most arguments are self explanatory.'''
         self.parents = [starting_sentence]
         self.top_sentence = starting_sentence
         self.top_sentence_streak = 0
@@ -152,6 +158,8 @@ class Promptifier():
 
         self.best_of_each_gen = f'./generations/{run_name}_BEST.csv'
         self.plot_filepath = f'./generations/{run_name}_BEST.png'
+
+        
         for i in range(starting_generation, num_generations):
             start_of_generation = time.time()
             self.advance_to_next_generation(generation=i)
