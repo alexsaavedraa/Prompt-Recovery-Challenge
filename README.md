@@ -2,7 +2,7 @@
 
 ## 1. Introduction
 
-The Reverse Prompt Engineering Competition is a machine learning competition where competitors, given a sample of original text, and that text rewritten by an LLM, For example, if given a text on the history of trees, and a sonnet about trees, your code might  predict "Rewrite this text in the style of Shakespear"
+The Reverse Prompt Engineering Competition is a machine learning competition where competitors, given a sample of original text, and that text rewritten by an LLM, For example, if given a text on the history of trees, and a sonnet about trees, your code might  predict "Rewrite this text in the style of Shakespeare"
 
 
 
